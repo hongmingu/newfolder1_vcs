@@ -139,8 +139,8 @@ class BaseFlow(models.Model):
 
 class BaseProCon(models.Model):
     userProfile = models.ForeignKey(Userprofile)
-    proBaseProfile = models.ForeignKey(Stashprofile)
-    conBaseProfile = models.ForeignKey(Stashprofile)
+    proBaseProfile = models.ForeignKey(Stashprofile, related_name='proBase')
+    conBaseProfile = models.ForeignKey(Stashprofile, related_name='conBase')
 
     CreatedAt = models.DateTimeField(auto_now_add=True)
     UpdatedAt = models.DateTimeField(auto_now=True)
@@ -168,8 +168,8 @@ class StashFlow(models.Model):
 
 class StashProCon(models.Model):
     userProfile = models.ForeignKey(Userprofile)
-    proStashProfile = models.ForeignKey(Stashprofile)
-    conStashProfile = models.ForeignKey(Stashprofile)
+    proStashProfile = models.ForeignKey(Stashprofile, related_name='proStash')
+    conStashProfile = models.ForeignKey(Stashprofile, related_name='conStash')
 
     CreatedAt = models.DateTimeField(auto_now_add=True)
     UpdatedAt = models.DateTimeField(auto_now=True)

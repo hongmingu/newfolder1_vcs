@@ -13,9 +13,9 @@ class Stash(models.Model):
 
     stashText = models.TextField(max_length=200)
 
-    stashImage = models.ImageField(null=True, blank=True, width_field="stashWidth", height_field="stashHeight")
-    stashWidth = models.IntegerField(default=0)
-    stashHeight = models.IntegerField(default=0)
+    # stashImage = models.ImageField(null=True, blank=True, width_field="stashWidth", height_field="stashHeight")
+    # stashWidth = models.IntegerField(default=0)
+    # stashHeight = models.IntegerField(default=0)
 
     stashCreatedAt = models.DateTimeField(auto_now_add=True)
     stashUpdatedAt = models.DateTimeField(auto_now=True)
