@@ -26,6 +26,8 @@ class Stash(models.Model):
 
 class StashImage(models.Model):
 
+
+    stashImageStash = models.ForeignKey(Stash)
     stashImageText = models.TextField(max_length=20)
     # stashImage = models.ImageField(null=True, blank=True, width_field="stashWidth", height_field="stashHeight")
     # stashWidth = models.IntegerField(default=0)
@@ -39,6 +41,7 @@ class StashImage(models.Model):
 
 class StashUrl(models.Model):
 
+    stashUrlStash = models.ForeignKey(Stash)
     stashUrlText = models.TextField(max_length=200)
 
     stashUrlCreatedAt = models.DateTimeField(auto_now_add=True)
