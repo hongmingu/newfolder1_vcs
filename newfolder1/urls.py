@@ -17,6 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
 from . import views
+
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('allauth.urls')),
@@ -27,10 +29,16 @@ urlpatterns = [
     url(r'^comment/', include('comment.urls', namespace='comment')),
     url(r'^info/', include('info.urls', namespace='info')),
     # url(r'^$', TemplateView.as_view(template_name='base.html'))
+
+    #############################################################################
     url(r'^$', views.AjaxListView.as_view(), name='post_list'),
     url(r'^Main/$', views.searched_list, name='post_list_main'),
     url(r'^articles/search/$', views.search_titles, name='search_titles'),
     url(r'^articles/$', TemplateView.as_view(template_name='artilces.html')),
-    # url(r'^home/$', )
+    url(r'^auth_login/$', TemplateView.as_view(template_name='auth_login.html')),
+    #############################################################################
+    # url(r'^accounts/register/$', views.UserCreateView.as_view(), name='register'),
+    # url(r'^accounts/register/done/$', views.UserCreateDoneTV.as_view(), name='register_done'),
+    #
 
 ]

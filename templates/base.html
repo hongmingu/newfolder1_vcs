@@ -1,56 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Tit111le</title>
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<html>
+  <head>
+    <title>{% block head_title %}{% endblock %}</title>
+    {% block extra_head %}
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
 
-</head>
-<body>
-    <a href="#", id="page_2">2p load</a>
+    {% if messages %}
+    <div>
+      <strong>Messages:</strong>
+      <ul>
+	{% for message in messages %}
+	<li>{{message}}</li>
+	{% endfor %}
+      </ul>
+    </div>
+    {% endif %}
 
-<ul>
-    {% include '_base.html' %}
-</ul>
-
-<div id="test">헬로
-
-</div>
-
-<div id="shuffle">
-    <div>1</div>
-    <div>2</div>
-    <div>3</div>
-    <div>4</div>
-    <div>5</div>
-    <div>6</div>
-    <div>7</div>
-    <div>8</div>
-    <div>9</div>
-</div>
-
-<script>
-    $(function () {
-        $('#page_2').click(function () {
-            $.get('', {page:1}, function (data) {
-                console.log('----response-----');
-                console.log(data);
-                var testnumber = $('#test');
-
-                testnumber.append(data);
-            });
-            return false;
-        });
-    });
-
-    $(function () {
-        var parent = $("#shuffle");
-        var divs = parent.children();
-        while (divs.length) {
-        parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
-        }
-    });
-</script>
-
-</body>
+    <div>
+      <strong>Menu:</strong>
+      <ul>
+	{% if user.is_authenticated %}
+	<li><a href="{% url 'account_email' %}">Change E-mail</a></li>
+	<li><a href="{% url 'account_logout' %}">Sign Out</a></li>
+	{% else %}
+	<li><a href="{% url 'account_login' %}">Sign In</a></li>
+	<li><a href="{% url 'account_signup' %}">Sign Up</a></li>
+	{% endif %}
+      </ul>
+    </div>
+    {% block content %}
+    {% endblock %}
+    {% endblock %}
+    {% block extra_body %}
+    {% endblock %}
+  </body>
 </html>

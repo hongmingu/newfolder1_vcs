@@ -24,8 +24,31 @@ class Stash(models.Model):
     def __str__(self):
         return self.stashText
 
+class StashImage(models.Model):
 
-    # stashPro = models.PositiveIntegerField(default=0)
+    stashImageText = models.TextField(max_length=20)
+    # stashImage = models.ImageField(null=True, blank=True, width_field="stashWidth", height_field="stashHeight")
+    # stashWidth = models.IntegerField(default=0)
+    # stashHeight = models.IntegerField(default=0)
+
+    stashImageCreatedAt = models.DateTimeField(auto_now_add=True)
+    stashImageUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.stashImageText
+
+class StashUrl(models.Model):
+
+    stashUrlText = models.TextField(max_length=200)
+
+    stashUrlCreatedAt = models.DateTimeField(auto_now_add=True)
+    stashUrlUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.stashUrlText
+
+
+# stashPro = models.PositiveIntegerField(default=0)
     # stashCon = models.PositiveIntegerField(default=0)
     # stashStage = models.PositiveIntegerField(default=0)
     # stashBlinded = models.SmallIntegerField(default=1)

@@ -16,8 +16,6 @@
 
 </ul>
 <script>
-
-
     jQuery(document).ready(function ($) {
         $('#search').keyup(function () {
             $.ajax({
@@ -34,11 +32,9 @@
         });
 
     });
-
     function searchSuccess(data, textStatus, jqXHR) {
         $('#search-results').html(data);
     }
-
 </script>
 </body>
 </html>
