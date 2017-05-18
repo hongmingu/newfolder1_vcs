@@ -36,7 +36,7 @@ class Baseprofile(models.Model):
     basePro = models.PositiveIntegerField(default=0)
     baseCon = models.PositiveIntegerField(default=0)
     baseStage = models.PositiveIntegerField(default=0)
-    baseBlinded = models.SmallIntegerField(default=1)
+    baseBlinded = models.PositiveSmallIntegerField(default=1)
 
     profileCreatedAt = models.DateTimeField(auto_now_add=True)
     profileUpdatedAt = models.DateTimeField(auto_now=True)
@@ -59,7 +59,7 @@ class Stashprofile(models.Model):
     stashPro = models.PositiveIntegerField(default=0)
     stashCon = models.PositiveIntegerField(default=0)
     stashStage = models.PositiveIntegerField(default=0)
-    stashBlinded = models.SmallIntegerField(default=1)
+    stashBlinded = models.PositiveSmallIntegerField(default=1)
 
     profileCreatedAt = models.DateTimeField(auto_now_add=True)
     profileUpdatedAt = models.DateTimeField(auto_now=True)
@@ -148,6 +148,9 @@ def saveCommentpostprofile(sender, instance, **kwargs):
 class Bridge(models.Model):
     bridgingUserProfile = models.ForeignKey(Userprofile, related_name='bridgingUserProfile')
     bridgedUserProfile = models.ForeignKey(Userprofile, related_name='bridgedUserProfile')
+
+    bridgeState = models.PositiveSmallIntegerField(default=0)
+
     bridgeCreatedAt = models.DateTimeField(auto_now_add=True)
     bridgeUpdatedAt = models.DateTimeField(auto_now=True)
 
@@ -162,6 +165,8 @@ class Bridge(models.Model):
 class BaseFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
     flowedBaseProfile = models.ForeignKey(Baseprofile)
+    flowIsActive = models.PositiveSmallIntegerField(default=0)
+
     flowCreatedAt = models.DateTimeField(auto_now_add=True)
     flowUpdatedAt = models.DateTimeField(auto_now=True)
 
@@ -173,17 +178,18 @@ class BaseFlow(models.Model):
 
 class BaseProCon(models.Model):
     userProfile = models.ForeignKey(Userprofile)
-    proBaseProfile = models.ForeignKey(Stashprofile, related_name='proBase')
-    conBaseProfile = models.ForeignKey(Stashprofile, related_name='conBase')
+    RelatedBaseProfile = models.ForeignKey(Stashprofile, related_name='RelatedBase', null=True)
+
+    ProConState = models.PositiveSmallIntegerField(default=0)
 
     CreatedAt = models.DateTimeField(auto_now_add=True)
     UpdatedAt = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Base Pro or Con // User : %s, proBase : %s, conBase : %s, UpdatedAt : %s, CreatedAt : %s' % (self.userProfile, self.proBaseProfile, self.conBaseProfile, self.CreatedAt, self.UpdatedAt)
+        return 'Base Pro or Con // User : %s, RelatedBase : %s, Pro or Con State : %s, UpdatedAt : %s, CreatedAt : %s' % (self.userProfile, self.RelatedBaseProfile, self.ProConState, self.CreatedAt, self.UpdatedAt)
 
     class Meta:
-        unique_together = (('userProfile', 'proBaseProfile'), ('userProfile', 'conBaseProfile'),)
+        unique_together = (('userProfile', 'RelatedBaseProfile'), )
 
 
 ########################################################################################
@@ -191,6 +197,7 @@ class BaseProCon(models.Model):
 class StashFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
     flowedStashProfile = models.ForeignKey(Stashprofile)
+    flowIsActive = models.PositiveSmallIntegerField(default=0)
     flowCreatedAt = models.DateTimeField(auto_now_add=True)
     flowUpdatedAt = models.DateTimeField(auto_now=True)
 
@@ -198,21 +205,22 @@ class StashFlow(models.Model):
         return 'Stash info // flowingUser : %s, flowedContent : %s, UpdatedAt : %s, CreatedAt : %s' % (self.flowingUserProfile, self.flowedStashProfile, self.flowCreatedAt, self.flowUpdatedAt)
 
     class Meta:
-        unique_together = (('flowingUserProfile', 'flowedStashProfile'),)
+        unique_together = (('flowingUserProfile', 'flowedStashProfile'), )
 
 class StashProCon(models.Model):
     userProfile = models.ForeignKey(Userprofile)
-    proStashProfile = models.ForeignKey(Stashprofile, related_name='proStash')
-    conStashProfile = models.ForeignKey(Stashprofile, related_name='conStash')
+    RelatedStashProfile = models.ForeignKey(Stashprofile, related_name='RelatedStash', null=True)
+
+    ProConState = models.PositiveSmallIntegerField(default=0)
 
     CreatedAt = models.DateTimeField(auto_now_add=True)
     UpdatedAt = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Stash Pro or Con // User : %s, proStash : %s, conStash : %s, UpdatedAt : %s, CreatedAt : %s' % (self.userProfile, self.proStashProfile, self.conStashProfile, self.CreatedAt, self.UpdatedAt)
+        return 'Stash Pro or Con // User : %s, RelatedStash : %s, Pro or Con State : %s, UpdatedAt : %s, CreatedAt : %s' % (self.userProfile, self.RelatedStashProfile, self.ProConState, self.CreatedAt, self.UpdatedAt)
 
     class Meta:
-        unique_together = (('userProfile', 'proStashProfile'), ('userProfile', 'conStashProfile'),)
+        unique_together = (('userProfile', 'RelatedStashProfile'), )
 
 
 ########################################################################################
@@ -220,6 +228,9 @@ class StashProCon(models.Model):
 class PostFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
     flowedPostProfile = models.ForeignKey(Postprofile)
+
+    flowIsActive = models.PositiveSmallIntegerField(default=0)
+
     flowCreatedAt = models.DateTimeField(auto_now_add=True)
     flowUpdatedAt = models.DateTimeField(auto_now=True)
 
@@ -234,6 +245,9 @@ class PostFlow(models.Model):
 class CommentBaseFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
     flowedCommentProfile = models.ForeignKey(Commentbaseprofile)
+
+    flowIsActive = models.PositiveSmallIntegerField(default=0)
+
     flowCreatedAt = models.DateTimeField(auto_now_add=True)
     flowUpdatedAt = models.DateTimeField(auto_now=True)
 
@@ -243,13 +257,11 @@ class CommentBaseFlow(models.Model):
     class Meta:
         unique_together = (('flowingUserProfile', 'flowedCommentProfile'),)
 
-
-
-#######################################################################################
-
 class CommentStashFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
     flowedCommentProfile = models.ForeignKey(Commentstashprofile)
+    flowIsActive = models.PositiveSmallIntegerField(default=0)
+
     flowCreatedAt = models.DateTimeField(auto_now_add=True)
     flowUpdatedAt = models.DateTimeField(auto_now=True)
 
@@ -259,13 +271,12 @@ class CommentStashFlow(models.Model):
     class Meta:
         unique_together = (('flowingUserProfile', 'flowedCommentProfile'),)
 
-
-
-#######################################################################################
-
 class CommentPostFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
     flowedCommentProfile = models.ForeignKey(Commentpostprofile)
+
+    flowIsActive = models.PositiveSmallIntegerField(default=0)
+
     flowCreatedAt = models.DateTimeField(auto_now_add=True)
     flowUpdatedAt = models.DateTimeField(auto_now=True)
 
