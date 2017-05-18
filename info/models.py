@@ -4,7 +4,7 @@ from title.models import Title
 from base.models import Base
 from stash.models import Stash
 from post.models import Post
-from comment.models import Comment
+from comment.models import CommentBase, CommentStash, CommentPost
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 # Create your models here.
@@ -94,20 +94,54 @@ def savePostprofile(sender, instance, **kwargs):
 
 ################################################################################################
 
-class Commentprofile(models.Model):
-    comment = models.OneToOneField(Comment, null=True, blank=True)
+class Commentbaseprofile(models.Model):
+    comment = models.OneToOneField(CommentBase, null=True, blank=True)
     description = models.TextField(max_length=100, blank=True, null=True)
     profileCreatedAt = models.DateTimeField(auto_now_add=True)
     profileUpdatedAt = models.DateTimeField(auto_now=True)
 
-@receiver(post_save, sender=Comment)
+@receiver(post_save, sender=CommentBase)
+def createCommentbaseprofile(sender, instance, created, **kwargs):
+    if created:
+        Commentbaseprofile.objects.create(comment=instance)
+
+@receiver(post_save, sender=CommentBase)
+def saveCommentBaseprofile(sender, instance, **kwargs):
+    instance.commentbaseprofile.save()
+
+################################################################################################
+
+class Commentstashprofile(models.Model):
+    comment = models.OneToOneField(CommentStash, null=True, blank=True)
+    description = models.TextField(max_length=100, blank=True, null=True)
+    profileCreatedAt = models.DateTimeField(auto_now_add=True)
+    profileUpdatedAt = models.DateTimeField(auto_now=True)
+
+@receiver(post_save, sender=CommentStash)
 def createCommentprofile(sender, instance, created, **kwargs):
     if created:
-        Commentprofile.objects.create(comment=instance)
+        Commentstashprofile.objects.create(comment=instance)
 
-@receiver(post_save, sender=Comment)
-def saveBaseprofile(sender, instance, **kwargs):
-    instance.commentprofile.save()
+@receiver(post_save, sender=CommentStash)
+def saveCommentstashprofile(sender, instance, **kwargs):
+    instance.commentstashprofile.save()
+
+################################################################################################
+
+class Commentpostprofile(models.Model):
+    comment = models.OneToOneField(CommentPost, null=True, blank=True)
+    description = models.TextField(max_length=100, blank=True, null=True)
+    profileCreatedAt = models.DateTimeField(auto_now_add=True)
+    profileUpdatedAt = models.DateTimeField(auto_now=True)
+
+@receiver(post_save, sender=CommentPost)
+def createCommentpostprofile(sender, instance, created, **kwargs):
+    if created:
+        Commentpostprofile.objects.create(comment=instance)
+
+@receiver(post_save, sender=CommentPost)
+def saveCommentpostprofile(sender, instance, **kwargs):
+    instance.commentpostprofile.save()
 
 #####################################################################################
 
@@ -197,14 +231,46 @@ class PostFlow(models.Model):
 
 ########################################################################################
 
-class CommentFlow(models.Model):
+class CommentBaseFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
-    flowedCommentProfile = models.ForeignKey(Commentprofile)
+    flowedCommentProfile = models.ForeignKey(Commentbaseprofile)
     flowCreatedAt = models.DateTimeField(auto_now_add=True)
     flowUpdatedAt = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Comment info // flowingUser : %s, flowedContent : %s, UpdatedAt : %s, CreatedAt : %s' % (self.flowingUserProfile, self.flowedCommentProfile, self.flowCreatedAt, self.flowUpdatedAt)
+        return 'CommentBase info // flowingUser : %s, flowedContent : %s, UpdatedAt : %s, CreatedAt : %s' % (self.flowingUserProfile, self.flowedCommentProfile, self.flowCreatedAt, self.flowUpdatedAt)
+
+    class Meta:
+        unique_together = (('flowingUserProfile', 'flowedCommentProfile'),)
+
+
+
+#######################################################################################
+
+class CommentStashFlow(models.Model):
+    flowingUserProfile = models.ForeignKey(Userprofile)
+    flowedCommentProfile = models.ForeignKey(Commentstashprofile)
+    flowCreatedAt = models.DateTimeField(auto_now_add=True)
+    flowUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'CommentStash info // flowingUser : %s, flowedContent : %s, UpdatedAt : %s, CreatedAt : %s' % (self.flowingUserProfile, self.flowedCommentProfile, self.flowCreatedAt, self.flowUpdatedAt)
+
+    class Meta:
+        unique_together = (('flowingUserProfile', 'flowedCommentProfile'),)
+
+
+
+#######################################################################################
+
+class CommentPostFlow(models.Model):
+    flowingUserProfile = models.ForeignKey(Userprofile)
+    flowedCommentProfile = models.ForeignKey(Commentpostprofile)
+    flowCreatedAt = models.DateTimeField(auto_now_add=True)
+    flowUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'CommentPost info // flowingUser : %s, flowedContent : %s, UpdatedAt : %s, CreatedAt : %s' % (self.flowingUserProfile, self.flowedCommentProfile, self.flowCreatedAt, self.flowUpdatedAt)
 
     class Meta:
         unique_together = (('flowingUserProfile', 'flowedCommentProfile'),)
