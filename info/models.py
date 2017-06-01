@@ -335,6 +335,24 @@ class CommentBaseFlow(models.Model):
     class Meta:
         unique_together = (('flowingUserProfile', 'flowedCommentProfile'),)
 
+class CommentBaseReaction(models.Model):
+    reactingUserProfile = models.ForeignKey(Userprofile)
+    reactedCommentBaseProfile = models.ForeignKey(Commentbaseprofile, related_name='ReactedCommentBase', null=True)
+
+    reactionType = models.PositiveSmallIntegerField(default=0)
+
+    reactionCreatedAt = models.DateTimeField(auto_now_add=True)
+    reactionUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'CommentBase Reaction info // ReactingUser : %s, ReactedContent : %s, ReactionTupe : %s, UpdatedAt : %s, CreatedAt : %s' % (
+            self.reactingUserProfile, self.reactedCommentBaseProfile, self.reactionType, self.reactionUpdatedAt,
+            self.reactionCreatedAt
+        )
+
+    class Meta:
+        unique_together = (('reactingUserProfile', 'reactedCommentBaseProfile'),)
+
 class CommentStashFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
     flowedCommentProfile = models.ForeignKey(Commentstashprofile)
@@ -348,6 +366,25 @@ class CommentStashFlow(models.Model):
 
     class Meta:
         unique_together = (('flowingUserProfile', 'flowedCommentProfile'),)
+
+class CommentStashReaction(models.Model):
+    reactingUserProfile = models.ForeignKey(Userprofile)
+    reactedCommentStashProfile = models.ForeignKey(Commentstashprofile, related_name='ReactedCommentStash', null=True)
+
+    reactionType = models.PositiveSmallIntegerField(default=0)
+
+    reactionCreatedAt = models.DateTimeField(auto_now_add=True)
+    reactionUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'CommentStash Reaction info // ReactingUser : %s, ReactedContent : %s, ReactionTupe : %s, UpdatedAt : %s, CreatedAt : %s' % (
+            self.reactingUserProfile, self.reactedCommentStashProfile, self.reactionType, self.reactionUpdatedAt,
+            self.reactionCreatedAt
+        )
+
+    class Meta:
+        unique_together = (('reactingUserProfile', 'reactedCommentStashProfile'),)
+
 
 class CommentPostFlow(models.Model):
     flowingUserProfile = models.ForeignKey(Userprofile)
@@ -364,6 +401,24 @@ class CommentPostFlow(models.Model):
     class Meta:
         unique_together = (('flowingUserProfile', 'flowedCommentProfile'),)
 
+class CommentPostReaction(models.Model):
+    reactingUserProfile = models.ForeignKey(Userprofile)
+    reactedCommentPostProfile = models.ForeignKey(Commentpostprofile, related_name='ReactedCommentPost',
+                                                   null=True)
+
+    reactionType = models.PositiveSmallIntegerField(default=0)
+
+    reactionCreatedAt = models.DateTimeField(auto_now_add=True)
+    reactionUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'CommentPost Reaction info // ReactingUser : %s, ReactedContent : %s, ReactionTupe : %s, UpdatedAt : %s, CreatedAt : %s' % (
+            self.reactingUserProfile, self.reactedCommentPostProfile, self.reactionType, self.reactionUpdatedAt,
+            self.reactionCreatedAt
+        )
+
+    class Meta:
+        unique_together = (('reactingUserProfile', 'reactedCommentPostProfile'),)
 
 
 #######################################################################################
