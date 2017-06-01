@@ -4,8 +4,6 @@ from django.contrib.auth.models import User
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 
-
-
 class Title(models.Model):
 
     titleJudgingText = models.TextField(max_length=160, unique=True)
@@ -16,6 +14,18 @@ class Title(models.Model):
 
     def __str__(self):
         return self.titleText
+
+class TitleText(models.Model):
+
+    titleTextTitle = models.ForeignKey(Title)
+    titleTextText = models.TextField(max_length=160)
+
+    titleTextCreatedAt = models.DateTimeField(auto_now_add=True)
+    titleTextUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.titleTextText
+
 #
 # def create_slug(instance, new_slug=None):
 #     slug = slugify(instance.satshTitle)

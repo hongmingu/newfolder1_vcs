@@ -1,9 +1,10 @@
 from django.contrib import admin
-from info.models import Userprofile, Bridge, Baseprofile, Stashprofile, Postprofile, Commentbaseprofile, Commentstashprofile, Commentpostprofile, BaseFlow, BaseProCon, StashFlow, StashProCon, PostFlow, CommentBaseFlow, CommentStashFlow, CommentPostFlow
+from info.models import Userprofile, Bridge, Userreaction, Baseprofile, Stashprofile, Postprofile, Commentbaseprofile, Commentstashprofile, Commentpostprofile, BaseFlow, BaseProCon, StashFlow, StashProCon, PostFlow, CommentBaseFlow, CommentStashFlow, CommentPostFlow
 # Register your models here.
 
 admin.site.register(Userprofile)
 admin.site.register(Bridge)
+admin.site.register(Userreaction)
 
 admin.site.register(Baseprofile)
 admin.site.register(BaseFlow)
@@ -24,5 +25,6 @@ admin.site.register(CommentStashFlow)
 
 admin.site.register(Commentpostprofile)
 admin.site.register(CommentPostFlow)
+
 
 

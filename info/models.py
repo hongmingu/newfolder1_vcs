@@ -28,6 +28,31 @@ def createUserprofile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def saveUserprofile(sender, instance, **kwargs):
     instance.userprofile.save()
+
+################################################################################################
+class Userreaction(models.Model):
+    userprofile = models.OneToOneField(Userprofile, primary_key=True)
+
+    userReaction1 = models.PositiveSmallIntegerField(default=0)
+    userReaction2 = models.PositiveSmallIntegerField(default=0)
+    userReaction3 = models.PositiveSmallIntegerField(default=0)
+
+    userreactionCreatedAt = models.DateTimeField(auto_now_add=True)
+    userreactionUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'User : %s, Reaction1 : %s, Reaction2 : %s, Reaction3 : %s, Updated at : %s' % (self.userprofile.user.username, self.userReaction1 , self.userReaction2, self.userReaction3, self.userreactionUpdatedAt)
+
+@receiver(post_save, sender=Userprofile)
+def createUserreaction(sender, instance, created, **kwargs):
+    if created:
+        Userreaction.objects.create(userprofile=instance)
+
+@receiver(post_save, sender=Userprofile)
+def saveUserreactions(sender, instance, **kwargs):
+    instance.userreaction.save()
+
+
 ################################################################################################
 class Baseprofile(models.Model):
     base = models.OneToOneField(Base, null=True, blank=True)
@@ -178,7 +203,7 @@ class BaseFlow(models.Model):
 
 class BaseProCon(models.Model):
     userProfile = models.ForeignKey(Userprofile)
-    RelatedBaseProfile = models.ForeignKey(Stashprofile, related_name='RelatedBase', null=True)
+    RelatedBaseProfile = models.ForeignKey(Baseprofile, related_name='RelatedBase', null=True)
 
     ProConState = models.PositiveSmallIntegerField(default=0)
 
@@ -186,15 +211,33 @@ class BaseProCon(models.Model):
     UpdatedAt = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Base Pro or Con // User : %s, RelatedBase : %s, Pro or Con State : %s, UpdatedAt : %s, CreatedAt : %s' % (self.userProfile, self.RelatedBaseProfile, self.ProConState, self.CreatedAt, self.UpdatedAt)
+        return 'Base Pro or Con // User : %s, RelatedBase : %s, Pro or Con State : %s, UpdatedAt : %s, CreatedAt : %s' % (self.userProfile, self.RelatedBaseProfile, self.ProConState, self.UpdatedAt, self.CreatedAt)
 
     class Meta:
         unique_together = (('userProfile', 'RelatedBaseProfile'), )
+
+class BaseReaction(models.Model):
+
+    reactingUserProfile = models.ForeignKey(Userprofile)
+    reactedBaseProfile = models.ForeignKey(Baseprofile, related_name='ReactedBase', null=True)
+
+    reactionType = models.PositiveSmallIntegerField(default=0)
+
+    reactionCreatedAt = models.DateTimeField(auto_now_add=True)
+    reactionUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'Base Reaction info // ReactingUser : %s, ReactedContent : %s, ReactionTupe : %s, UpdatedAt : %s, CreatedAt : %s' % (self.reactingUserProfile, self.reactedBaseProfile, self.reactionType, self.reactionUpdatedAt, self.reactionCreatedAt)
+
+    class Meta:
+        unique_together = (('reactingUserProfile', 'reactedBaseProfile'),)
+
 
 
 ########################################################################################
 
 class StashFlow(models.Model):
+
     flowingUserProfile = models.ForeignKey(Userprofile)
     flowedStashProfile = models.ForeignKey(Stashprofile)
     flowIsActive = models.PositiveSmallIntegerField(default=0)
@@ -222,6 +265,22 @@ class StashProCon(models.Model):
     class Meta:
         unique_together = (('userProfile', 'RelatedStashProfile'), )
 
+class StashReaction(models.Model):
+    reactingUserProfile = models.ForeignKey(Userprofile)
+    reactedStashProfile = models.ForeignKey(Stashprofile, related_name='ReactedStash', null=True)
+
+    reactionType = models.PositiveSmallIntegerField(default=0)
+
+    reactionCreatedAt = models.DateTimeField(auto_now_add=True)
+    reactionUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'Stash Reaction info // ReactingUser : %s, ReactedContent : %s, ReactionTupe : %s, UpdatedAt : %s, CreatedAt : %s' % (
+        self.reactingUserProfile, self.reactedStashProfile, self.reactionType, self.reactionUpdatedAt, self.reactionCreatedAt
+        )
+
+    class Meta:
+        unique_together = (('reactingUserProfile', 'reactedStashProfile'),)
 
 ########################################################################################
 
@@ -239,6 +298,25 @@ class PostFlow(models.Model):
 
     class Meta:
         unique_together = (('flowingUserProfile', 'flowedPostProfile'),)
+
+class PostReaction(models.Model):
+    reactingUserProfile = models.ForeignKey(Userprofile)
+    reactedPostProfile = models.ForeignKey(Postprofile, related_name='ReactedPost', null=True)
+
+    reactionType = models.PositiveSmallIntegerField(default=0)
+
+    reactionCreatedAt = models.DateTimeField(auto_now_add=True)
+    reactionUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'Post Reaction info // ReactingUser : %s, ReactedContent : %s, ReactionTupe : %s, UpdatedAt : %s, CreatedAt : %s' % (
+            self.reactingUserProfile, self.reactedPostProfile, self.reactionType, self.reactionUpdatedAt,
+            self.reactionCreatedAt
+        )
+
+    class Meta:
+        unique_together = (('reactingUserProfile', 'reactedPostProfile'),)
+
 
 ########################################################################################
 

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'title',
     'base',
     'stash',
@@ -138,3 +139,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = '/articles/'
+
+'''
+ACCOUNT_AUTHENTICATION_METHOD (=”username” | “email” | “username_email”)
+Specifies the login method to use – whether the user logs in by entering their username, e-mail address, or either one of both. Setting this to “email” requires ACCOUNT_EMAIL_REQUIRED=True
+ACCOUNT_CONFIRM_EMAIL_ON_GET (=False)
+Determines whether or not an e-mail address is automatically confirmed by a GET request. GET is not designed to modify the server state, though it is commonly used for email confirmation. To avoid requiring user interaction, consider using POST via Javascript in your email confirmation template as an alternative to setting this to True.
+
+'''
