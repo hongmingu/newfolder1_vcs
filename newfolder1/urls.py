@@ -31,14 +31,9 @@ urlpatterns = [
     # url(r'^$', TemplateView.as_view(template_name='base.html'))
 
     #############################################################################
-    url(r'^$', views.AjaxListView.as_view(), name='post_list'),
-    url(r'^Main/$', views.searched_list, name='post_list_main'),
-    url(r'^articles/search/$', views.search_titles, name='search_titles'),
-    url(r'^articles/$', TemplateView.as_view(template_name='artilces.html')),
-    url(r'^auth_login/$', TemplateView.as_view(template_name='auth_login.html')),
+    url(r'^$', views.AjaxListView.as_view(), name='for_base'),
+    url(r'^searched_list/$', views.searched_list, name='searched_list'),
+    url(r'^tutomain/$', TemplateView.as_view(template_name='tutobase.html')),
+    url(r'^tutomain/ajax/$', views.tutomainajax, name='tutomain'),
     #############################################################################
-    # url(r'^accounts/register/$', views.UserCreateView.as_view(), name='register'),
-    # url(r'^accounts/register/done/$', views.UserCreateDoneTV.as_view(), name='register_done'),
-    #
-
 ]

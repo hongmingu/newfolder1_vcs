@@ -1,3 +1,7 @@
-{% for post in title_list %}
-    {{ post.titleText }}
-{% endfor %}
+<div id="toappend">
+    {% if posts %}
+        {% for post in posts %}
+            {{ post.titleText }}
+        {% endfor %}
+    {% endif %}
+</div>

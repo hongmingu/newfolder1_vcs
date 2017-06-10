@@ -26,6 +26,18 @@ class TitleText(models.Model):
     def __str__(self):
         return self.titleTextText
 
+class TitleLength(models.Model):
+    titleLengthTitle = models.ForeignKey(Title)
+    titleLengthText = models.TextField(max_length=100)
+    titleLengthLength = models.PositiveIntegerField(default=0)
+    titleTextCreatedAt = models.DateTimeField(auto_now_add=True)
+    titleTextUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.titleLengthText
+
+
+
 #
 # def create_slug(instance, new_slug=None):
 #     slug = slugify(instance.satshTitle)

@@ -6,22 +6,41 @@
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 </head>
 <body>
-<div id="header">
-    <h2 class="maintitle">Easy&amp;Fast Dajgno Web Brower</h2>
-    {% if user.is_active %}
-        <h4 class="welcome">Welcome,
-        <strong>{% firstof user.get_short_name user.get_username %}</strong>/
-        <a href="{% url 'password_change' %}">Change Password</a> /
-        <a href="{% url 'logout' %}">Logout</a>
-        </h4>
-    {% else %}
-        <h4 class="welcome">Welcome, Anonymous /
-        <a href="{% url 'login' %}">Login</a> /
-        <a href="{% url 'register' %}">Register</a>
+<div>
+    <form id="lalaform">
+        PUSHPUSH : <input type="text" value="hello" id="lalainput"><input type="button" value="searchWord" id="lalasubmit">
+    </form>
+</div>
 
-        </h4>
+<div id="toappend">
+    {% if posts %}
+        {% for post in posts %}
+            {{ post.titleText }}
+        {% endfor %}
     {% endif %}
 </div>
+
 </body>
+<script>
+    $(document).ready(function () {
+        $('#lalasubmit').click(function () {
+            var lalatextserial = $('#lalainput').val();
+            $.ajax({
+                url:'/tutomain/ajax/',
+                type:'get',
+                data:{
+                  word : lalatextserial
+                },
+                dataType:'html',
+                success:function (data) {
+{#                    var datamodify = JSON.stringify(data)#}
+                    alert(data);
+                 $('#toappend').append(data)
+                }
+
+            })
+        })
+    });
+</script>
 </html>
 

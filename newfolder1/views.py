@@ -1,30 +1,55 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
-from title.models import Title
+from title.models import Title, TitleLength
 from django.views.generic.list import ListView
 from django.utils import timezone
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
 from django.core.urlresolvers import reverse_lazy
 
-def articles(request):
-    render(request, 'artilces.html')
 
-def search_titles(request):
-    if request.method == 'POST' :
-        search_text = request.POST['search_text']
-    else:
-        search_text = ''
+def searched_list(request):
+    # query = request.GET.get('q')
+    # queryset_list = Title.objects.filter(titleText__contains='q')
+    if request.method == 'GET':
+        if request.is_ajax():
+            q = request.GET['q']
+            queryset_list = Title.objects.filter(titleText__contains=q)
+            return JsonResponse(queryset_list)
 
-    articles = Title.objects.filter(titleText__contains=search_text)
+    if request.method == 'POST' and 'start_manifest' in request.POST:
+        queryset_list = Title.objects.filter(titleText__contains='1')
 
-    return render(request, 'search.html', {'articles' : articles})
+    if request.method == 'POST' and 'close_manifest' in request.POST:
+        queryset_list = Title.objects.filter(titleText__contains='2')
 
+    context = {
+        'title': queryset_list,
+    }
 
+    return render(request, 'searched_list.html', context)
+
+def tutomainajax(request):
+    if request.method == 'GET':
+        if request.is_ajax():
+
+            word = request.GET['word']
+            word = word.replace(' ', '').lower()
+            # queryset_list = {'hello' : word}
+            posts = Title.objects.filter(titleText__contains=word).order_by('titlelength__titleLengthLength')
+            queryset_list = {'posts' : posts}
+            return render(request, '_base.html', queryset_list)
+
+    return HttpResponse
+
+######################################
+'''
+
+'''
 
 class AjaxListView(ListView):
     model = Title
@@ -44,35 +69,3 @@ class AjaxListView(ListView):
 
 # post_list = AjaxListView.as_view(model=Title, template_name='base.html', context_object_name='title_list', paginate_by=2)
         # Create your views here.
-
-def searched_list(request):
-    query = request.GET.get("q")
-    queryset_list = Title.objects.filter(titleText__contains='4')
-    if request.method == 'GET':
-        if request.is_ajax():
-            if query:
-                queryset_list = Title.objects.filter(titleText__contains='3')
-                return queryset_list
-
-    if request.method == 'POST' and 'start_manifest' in request.POST:
-        queryset_list = Title.objects.filter(titleText__contains='1')
-
-    if request.method == 'POST' and 'close_manifest' in request.POST:
-        queryset_list = Title.objects.filter(titleText__contains='2')
-
-    context = {
-        'title' : queryset_list,
-    }
-
-    return render(request, 'Main.html', context)
-
-
-######################################
-
-class UserCreateView(CreateView):
-    template_name = 'registration/register.html'
-    form_class = UserCreationForm
-    success_url = reverse_lazy('register_done')
-
-class UserCreateDoneTV(TemplateView):
-    template_name = 'registration/register_done.html'
