@@ -137,6 +137,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join('newfolder1', 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 LOGIN_REDIRECT_URL = '/articles/'
 
@@ -146,4 +150,9 @@ Specifies the login method to use – whether the user logs in by entering their
 ACCOUNT_CONFIRM_EMAIL_ON_GET (=False)
 Determines whether or not an e-mail address is automatically confirmed by a GET request. GET is not designed to modify the server state, though it is commonly used for email confirmation. To avoid requiring user interaction, consider using POST via Javascript in your email confirmation template as an alternative to setting this to True.
 
+'''
+
+###############################
+'''
+CSRF_USE_SESSIONS = True
 '''

@@ -34,6 +34,8 @@ urlpatterns = [
     url(r'^$', views.AjaxListView.as_view(), name='for_base'),
     url(r'^searched_list/$', views.searched_list, name='searched_list'),
     url(r'^tutomain/$', TemplateView.as_view(template_name='tutobase.html')),
-    url(r'^tutomain/ajax/$', views.tutomainajax, name='tutomain'),
+    url(r'^tutomain/ajax/$', views.tutomainajax, name='tutomainAjax'),
+    url(r'^tutomain/ajax/side/$', views.tutomainside, name='tutomainAjaxSide'),
+
     #############################################################################
 ]

@@ -1,9 +1,11 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>TutoBase</title>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="{% static 'jquery.csrf.js' %}"></script>
 </head>
 <body>
 <div>
@@ -19,10 +21,31 @@
         {% endfor %}
     {% endif %}
 </div>
+<div id="side">
+
+    {% if sides %}
+        {% for side in sides %}
+            {{ side.titleText }}
+        {% endfor %}
+    {% endif %}
+</div>
 
 </body>
 <script>
+
+
     $(document).ready(function () {
+
+        $.ajax({
+            url:'/tutomain/ajax/side/',
+            type:'post',
+            data:{
+            },
+            dataType:'html',
+            success:function (data) {
+                alert(data);
+            }
+        });
         $('#lalasubmit').click(function () {
             var lalatextserial = $('#lalainput').val();
             $.ajax({
@@ -37,10 +60,11 @@
                     alert(data);
                  $('#toappend').append(data)
                 }
-
-            })
-        })
+            });
+        });
     });
+
+
 </script>
 </html>
 

@@ -47,6 +47,18 @@ def tutomainajax(request):
     return HttpResponse
 
 ######################################
+
+def tutomainside(request):
+    if request.method == 'POST':
+        if request.is_ajax():
+
+            posts = Title.objects.all()
+            queryset_list = {'posts' : posts}
+            return render(request, '_base.html', queryset_list)
+
+    return HttpResponse
+
+######################################
 '''
 
 '''
