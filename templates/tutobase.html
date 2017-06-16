@@ -8,6 +8,16 @@
     <script src="{% static 'jquery.csrf.js' %}"></script>
 </head>
 <body>
+
+<div>
+    <button id="back">back</button><br>
+    <button id="forward">Forward</button><br>
+    <button id="length">length</button><br>
+    <button id="go">go</button><br>
+    <button id="pushState">pushState</button><br>
+    <button id="replaceState">replaceState</button><br>
+    <button id="onpopstate">onpopstate</button><br>
+</div>
 <div>
     <form id="lalaform">
         PUSHPUSH : <input type="text" value="hello" id="lalainput"><input type="button" value="searchWord" id="lalasubmit">
@@ -21,8 +31,8 @@
         {% endfor %}
     {% endif %}
 </div>
-<div id="side">
 
+<div id="side">
     {% if sides %}
         {% for side in sides %}
             {{ side.titleText }}
@@ -32,20 +42,18 @@
 
 </body>
 <script>
-
-
     $(document).ready(function () {
+{#        $.ajax({#}
+{#            url:'/tutomain/ajax/side/',#}
+{#            type:'post',#}
+{#            data:{#}
+{#            },#}
+{#            dataType:'json',#}
+{#            success:function (data) {#}
+{#                alert(data);#}
+{#            }#}
+{#        });#}
 
-        $.ajax({
-            url:'/tutomain/ajax/side/',
-            type:'post',
-            data:{
-            },
-            dataType:'html',
-            success:function (data) {
-                alert(data);
-            }
-        });
         $('#lalasubmit').click(function () {
             var lalatextserial = $('#lalainput').val();
             $.ajax({
@@ -54,17 +62,39 @@
                 data:{
                   word : lalatextserial
                 },
-                dataType:'html',
+                dataType:'json',
                 success:function (data) {
 {#                    var datamodify = JSON.stringify(data)#}
-                    alert(data);
+                    alert(JSON.stringify(data));
                  $('#toappend').append(data)
                 }
             });
         });
+
+        $('#length').click(function () {
+            var length = window.history.length
+            alert(length)
+        })
+        $('#go').click(function () {
+            window.history.pushState(null,'pushstateTitle','/hello2')
+        })
+        $('#back').click(function () {
+            history.back()
+        })
+        $('#forward').click(function () {
+            history.forward()
+        })
+        $('#pushState').click(function () {
+            window.history.pushState(null,'pushstateTitle','/hello')
+        })
+        $('#replaceState').click(function () {
+            window.history.replaceState(null,'replacestateTitle','/world')
+        })
+        $('#length').click(function () {
+            var length = window.history.length
+            alert(length)
+        })
     });
-
-
 </script>
 </html>
 

@@ -41,8 +41,18 @@ def tutomainajax(request):
             word = word.replace(' ', '').lower()
             # queryset_list = {'hello' : word}
             posts = Title.objects.filter(titleText__contains=word).order_by('titlelength__titleLengthLength')
-            queryset_list = {'posts' : posts}
-            return render(request, '_base.html', queryset_list)
+            queryset_list = {}
+
+            for post in posts:
+                queryset_list['name'] = post.titleText
+                arr = []
+                arr.append('arr1')
+                arr.append('arr2')
+                queryset_list['arrlist'] = arr
+                queryset_list_1 = {}
+                queryset_list_1['1'] = queryset_list
+                queryset_list_1['2'] = queryset_list
+            return JsonResponse(queryset_list_1)
 
     return HttpResponse
 
