@@ -1,0 +1,101 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TutoBase</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="{% static 'jquery.csrf.js' %}"></script>
+</head>
+<body>
+
+<div>
+    <button id="back">back</button><br>
+    <button id="forward">Forward</button><br>
+    <button id="length">length</button><br>
+    <button id="go">go</button><br>
+    <button id="pushState">pushState</button><br>
+    <button id="replaceState">replaceState</button><br>
+    <button id="onpopstate">onpopstate</button><br>
+</div>
+<div>
+    <form id="lalaform">
+        PUSHPUSH : <input type="text" value="hello" id="lalainput"><input type="button" value="searchWord" id="lalasubmit">
+    </form>
+</div>
+<div id="titleResult">
+
+</div>
+
+<div id="toappend">
+
+</div>
+
+<div>
+    <
+</div>
+
+<div id="side">
+    {% if sides %}
+        {% for side in sides %}
+            {{ side.titleText }}
+        {% endfor %}
+    {% endif %}
+</div>
+
+</body>
+<script>
+    $(document).ready(function () {
+{#        $.ajax({#}
+{#            url:'/tutomain/ajax/side/',#}
+{#            type:'post',#}
+{#            data:{#}
+{#            },#}
+{#            dataType:'json',#}
+{#            success:function (data) {#}
+{#                alert(data);#}
+{#            }#}
+{#        });#}
+
+        $('#lalasubmit').click(function () {
+            var lalatextserial = $('#lalainput').val();
+            $.ajax({
+                url:'/tutomain/search/',
+                type:'get',
+                data:{
+                  q : lalatextserial
+                },
+                dataType:'json',
+                cache : false,
+                success:function (data) {
+{#                    console.log(data);#}
+                    $.each(data, function () {
+                    console.log(data);
+                    })
+                }
+            });
+        });
+
+        $('#length').click(function () {
+            var length = window.history.length;
+            alert(length)
+        });
+        $('#go').click(function () {
+            window.history.pushState(null,'pushstateTitle','/hello2')
+        });
+        $('#back').click(function () {
+            history.back()
+        });
+        $('#forward').click(function () {
+            history.forward()
+        });
+        $('#pushState').click(function () {
+            window.history.pushState(null,'pushstateTitle','/hello')
+        });
+        $('#replaceState').click(function () {
+            window.history.replaceState(null,'replacestateTitle','/world')
+        });
+    });
+</script>
+</html>
+

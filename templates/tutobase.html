@@ -9,91 +9,47 @@
 </head>
 <body>
 
-<div>
-    <button id="back">back</button><br>
-    <button id="forward">Forward</button><br>
-    <button id="length">length</button><br>
-    <button id="go">go</button><br>
-    <button id="pushState">pushState</button><br>
-    <button id="replaceState">replaceState</button><br>
-    <button id="onpopstate">onpopstate</button><br>
-</div>
-<div>
-    <form id="lalaform">
-        PUSHPUSH : <input type="text" value="hello" id="lalainput"><input type="button" value="searchWord" id="lalasubmit">
-    </form>
-</div>
+    <div>
+        <form id="searchForm">
+            SearchBar : <input type="text" value="Enter Your SearchWord" id="searchInput"><input type="button" value="Search Click" id="searchSubmit">
+        </form>
+    </div>
 
-<div id="toappend">
-    {% if posts %}
-        {% for post in posts %}
-            {{ post.titleText }}
-        {% endfor %}
-    {% endif %}
-</div>
+    <div id="searchedData">
 
-<div id="side">
-    {% if sides %}
-        {% for side in sides %}
-            {{ side.titleText }}
-        {% endfor %}
-    {% endif %}
-</div>
+    </div>
 
 </body>
+
 <script>
     $(document).ready(function () {
-{#        $.ajax({#}
-{#            url:'/tutomain/ajax/side/',#}
-{#            type:'post',#}
-{#            data:{#}
-{#            },#}
-{#            dataType:'json',#}
-{#            success:function (data) {#}
-{#                alert(data);#}
-{#            }#}
-{#        });#}
-
-        $('#lalasubmit').click(function () {
-            var lalatextserial = $('#lalainput').val();
+        var hellofrom;
+        $("#searchSubmit").click(function () {
+            var trimedSearchWord = $("#searchInput").val();
+            var rawSearchWord = trimedSearchWord.split(" ").join("");
             $.ajax({
-                url:'/tutomain/ajax/',
-                type:'get',
-                data:{
-                  word : lalatextserial
-                },
-                dataType:'json',
-                success:function (data) {
-{#                    var datamodify = JSON.stringify(data)#}
-                    alert(JSON.stringify(data));
-                 $('#toappend').append(data)
+                url:"/tutomain/search/",
+                type:"get",
+                data:{q : rawSearchWord},
+                dataType : "html",
+                cache : false,
+                success : function (data) {
+
+
+{#                    console.log(window.location.href.replace("http://127.0.0.1:8000", ""));#}
+                    console.log(window.location.hash);
+                    window.history.pushState({'from':window.location.href}, "searched", "?q="+rawSearchWord);
+                    $("#searchedData").append(data)
+                    hellofrom = window.location.href;
+                    alert(hellofrom)
                 }
             });
         });
-
-        $('#length').click(function () {
-            var length = window.history.length
-            alert(length)
-        })
-        $('#go').click(function () {
-            window.history.pushState(null,'pushstateTitle','/hello2')
-        })
-        $('#back').click(function () {
-            history.back()
-        })
-        $('#forward').click(function () {
-            history.forward()
-        })
-        $('#pushState').click(function () {
-            window.history.pushState(null,'pushstateTitle','/hello')
-        })
-        $('#replaceState').click(function () {
-            window.history.replaceState(null,'replacestateTitle','/world')
-        })
-        $('#length').click(function () {
-            var length = window.history.length
-            alert(length)
-        })
+        window.onpopstate = function(event) {
+            alert("to: " + document.location + ", state: " + JSON.stringify(event.state) + "From" + hellofrom);
+            console.log(hellofrom);
+            hellofrom = window.location.href;
+        };
     });
 </script>
 </html>

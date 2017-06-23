@@ -12,8 +12,6 @@ from django.db.models.signals import post_save
 class Userprofile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
 
-    userprofileCalledName = models.TextField(max_length=30)
-    userprofileImage = models.ImageField(blank=True)
     userprofileDescription = models.TextField(max_length=100)
     userprofileCreatedAt = models.DateTimeField(auto_now_add=True)
     userprofileUpdatedAt = models.DateTimeField(auto_now=True)
@@ -28,6 +26,53 @@ def createUserprofile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def saveUserprofile(sender, instance, **kwargs):
     instance.userprofile.save()
+################################################################################################
+
+class Userimage(models.Model):
+    userprofile = models.OneToOneField(Userprofile, primary_key=True)
+    userprofileImage = models.ImageField(blank=True)
+
+    userprofileDescription = models.TextField(max_length=100)
+    userprofileCreatedAt = models.DateTimeField(auto_now_add=True)
+    userprofileUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'UserProfile_Userimage : %s, Updated at : %s' % (self.userprofile.user.username, self.userprofileUpdatedAt)
+
+@receiver(post_save, sender=Userprofile)
+def createUserimage(sender, instance, created, **kwargs):
+    if created:
+        Userimage.objects.create(userprofile=instance)
+
+@receiver(post_save, sender=Userprofile)
+def saveUserimage(sender, instance, **kwargs):
+    instance.userimage.save()
+
+
+################################################################################################
+
+class Usercalledname(models.Model):
+    userprofile = models.OneToOneField(Userprofile, primary_key=True)
+    userprofileCalledName = models.TextField(max_length=30)
+
+    userprofileDescription = models.TextField(max_length=100)
+    userprofileCreatedAt = models.DateTimeField(auto_now_add=True)
+    userprofileUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'UserProfile_Usercalled_Actualuser : %s, Updated at : %s' % (self.userprofile.user.username, self.userprofileUpdatedAt)
+
+
+@receiver(post_save, sender=Userprofile)
+def createUsercalledname(sender, instance, created, **kwargs):
+    if created:
+        Usercalledname.objects.create(userprofile=instance)
+
+
+@receiver(post_save, sender=Userprofile)
+def saveUserimage(sender, instance, **kwargs):
+    instance.usercalledname.save()
+
 
 ################################################################################################
 class Userreaction(models.Model):
@@ -56,15 +101,14 @@ def saveUserreactions(sender, instance, **kwargs):
 ################################################################################################
 class Baseprofile(models.Model):
     base = models.OneToOneField(Base, null=True, blank=True)
-    description = models.TextField(max_length=100, blank=True, null=True)
 
-    basePro = models.PositiveIntegerField(default=0)
-    baseCon = models.PositiveIntegerField(default=0)
-    baseStage = models.PositiveIntegerField(default=0)
-    baseBlinded = models.PositiveSmallIntegerField(default=1)
+    description = models.TextField(max_length=100, blank=True, null=True)
 
     profileCreatedAt = models.DateTimeField(auto_now_add=True)
     profileUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'BaseProfile and Base is : %s' % (self.base.baseTitle.titleText)
 
 @receiver(post_save, sender=Base)
 def createBaseprofile(sender, instance, created, **kwargs):
@@ -77,8 +121,61 @@ def saveBaseprofile(sender, instance, **kwargs):
 
 ################################################################################################
 
+class Basevoted(models.Model):
+
+    baseprofile = models.OneToOneField(Baseprofile)
+
+    description = models.TextField(max_length=100, blank=True, null=True)
+
+    basePro = models.PositiveIntegerField(default=0)
+    baseCon = models.PositiveIntegerField(default=0)
+    baseStage = models.PositiveIntegerField(default=0)
+    baseBlinded = models.PositiveSmallIntegerField(default=1)
+
+    profileCreatedAt = models.DateTimeField(auto_now_add=True)
+    profileUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'Baseprocon and baseprofile is : %s' % (self.baseprofile.base.baseTitle.titleText)
+
+@receiver(post_save, sender=Baseprofile)
+def createBasevoted(sender, instance, created, **kwargs):
+    if created:
+        Basevoted.objects.create(baseprofile=instance)
+
+
+@receiver(post_save, sender=Baseprofile)
+def saveBaseprocon(sender, instance, **kwargs):
+    instance.basevoted.save()
+
+
+################################################################################################
+
 class Stashprofile(models.Model):
     stash = models.OneToOneField(Stash, null=True, blank=True)
+    description = models.TextField(max_length=100, blank=True, null=True)
+
+    profileCreatedAt = models.DateTimeField(auto_now_add=True)
+    profileUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return 'StashProfile and Stash is : %s' % (self.stash.stashTitle.titleText)
+
+@receiver(post_save, sender=Stash)
+def createStashprofile(sender, instance, created, **kwargs):
+    if created:
+        Stashprofile.objects.create(stash=instance)
+
+@receiver(post_save, sender=Stash)
+def saveStashprofile(sender, instance, **kwargs):
+    instance.stashprofile.save()
+
+
+################################################################################################
+class Stashvoted(models.Model):
+
+    stashprofile = models.OneToOneField(Stashprofile)
+
     description = models.TextField(max_length=100, blank=True, null=True)
 
     stashPro = models.PositiveIntegerField(default=0)
@@ -89,14 +186,19 @@ class Stashprofile(models.Model):
     profileCreatedAt = models.DateTimeField(auto_now_add=True)
     profileUpdatedAt = models.DateTimeField(auto_now=True)
 
-@receiver(post_save, sender=Stash)
-def createStashprofile(sender, instance, created, **kwargs):
-    if created:
-        Stashprofile.objects.create(stash=instance)
+    def __str__(self):
+        return 'Stashprocon and Stashprofile is : %s' % (self.stashprofile.stash.stashTitle.titleText)
 
-@receiver(post_save, sender=Stash)
-def saveStashprofile(sender, instance, **kwargs):
-    instance.stashprofile.save()
+@receiver(post_save, sender=Stashprofile)
+def createStashvoted(sender, instance, created, **kwargs):
+    if created:
+        Stashvoted.objects.create(baseprofile=instance)
+
+
+@receiver(post_save, sender=Stashprofile)
+def saveStashvoted(sender, instance, **kwargs):
+    instance.stashvoted.save()
+
 
 ################################################################################################
 

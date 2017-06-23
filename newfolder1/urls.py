@@ -36,6 +36,9 @@ urlpatterns = [
     url(r'^tutomain/$', TemplateView.as_view(template_name='tutobase.html')),
     url(r'^tutomain/ajax/$', views.tutomainajax, name='tutomainAjax'),
     url(r'^tutomain/ajax/side/$', views.tutomainside, name='tutomainAjaxSide'),
+    url(r'^tutomain/detail/(?P<pk>\d+)/$', views.tutodetail, name="tutoDetail"),
+    url(r'^tutomain/search/$', views.search, name="tutoSearch"),
 
     #############################################################################
+
 ]
