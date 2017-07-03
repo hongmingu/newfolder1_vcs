@@ -19,12 +19,127 @@
 
     </div>
 
+    <div><button id="loadButton">LoadButton</button></div>
 </body>
 
 <script>
     $(document).ready(function () {
+        function ajaxSearch (word) {
+            $.ajax({
+                url:"/tutomain/search/",
+                type:"get",
+                data:{q : word},
+                dataType : "html",
+                cache : false,
+                success : function (data) {
+                    console.log(window.location.hash);
+                    window.history.pushState({'from':window.location.href}, "searched", "?q="+rawSearchWord);
+                    $("#searchedData").remove();
+                    $("#searchedData").appendChild(data);
+                    hellofrom = window.location.href;
+                    alert(hellofrom)
+                }
+            });
+        }
         var hellofrom;
+        $("#searchInput").on('keypress', function (e) {
+            var code = e.keyCode||e.which;
+            if (code==13){
+                var trimedSearchWord = $("#searchInput").val();
+                var rawSearchWord = trimedSearchWord.split(" ").join("");
+                alert(rawSearchWord);
+                $.ajax({
+                url:"/tutomain/search/",
+                type:"get",
+                data:{q : rawSearchWord},
+                dataType : "html",
+                cache : true,
+                success : function (data) {
+                    console.log(window.location.href.replace("http://127.0.0.1:8000", ""));
+                    console.log(window.location.hash);
+                    window.history.pushState({'from':window.location.href}, "searched", "?q="+rawSearchWord);
+                    $("#searchedData").append(data);
+                    hellofrom = window.location.href;
+                    alert(hellofrom)
+                    }
+                });
+                e.preventDefault();
+            }
+        });
         $("#searchSubmit").click(function () {
+            var trimedSearchWord = $("#searchInput").val();
+            var rawSearchWord = trimedSearchWord.split(" ").join("");
+            rawSearchWord.type
+            $.ajax({
+                url:"/tutomain/search/",
+                type:"get",
+                data:{qqq : rawSearchWord},
+                dataType : "html",
+                cache : false,
+                success : function (data) {
+
+
+{#                    console.log(window.location.href.replace("http://127.0.0.1:8000", ""));#}
+                    console.log(window.location.hash);
+                    window.history.pushState({'from':window.location.href}, "searched", "?q="+rawSearchWord);
+                    $("#searchedData").append(data);
+                    hellofrom = window.location.href;
+                    alert(hellofrom)
+                }
+            });
+        });
+        window.onpopstate = function(event) {
+            window.scrollTo(0,0)
+            var trimedSearchWord = $("#searchInput").val();
+            var rawSearchWord = trimedSearchWord.split(" ").join("");
+{#            alert("to: " + document.location + "// data stored :" + JSON.stringify(event.state) + "// From" + hellofrom);#}
+            if(event.state){
+                $.ajax({
+                    url:"/tutomain/search/",
+                    type:"get",
+                    data:{q : rawSearchWord},
+                    dataType : "html",
+                    cache : false,
+                    success : function (data) {
+                        console.log(window.location.hash);
+                        window.history.pushState({'from':window.location.href}, "searched", "?q="+rawSearchWord);
+                        hellofrom = window.location.href;
+                        $("#searchedData").replaceWith(data);
+                        alert(event.state.from);
+                    }
+                });
+            }
+            else {
+                console.log(hellofrom);
+                hellofrom = window.location.href;
+                alert('thereisnodata')
+            }
+
+        };
+
+        $(window).scroll(function() {
+            if($(window).scrollTop() + $(window).height() == $(document).height()) {
+{#                alert("near bottom!");#}
+                var trimedSearchWord = $("#searchInput").val();
+                var rawSearchWord = trimedSearchWord.split(" ").join("");
+                    $.ajax({
+                        url:"/tutomain/search/",
+                        type:"get",
+                        data:{q : rawSearchWord},
+                        dataType : "html",
+                        cache : false,
+                        success : function (data) {
+                            console.log(window.location.hash);
+                            window.history.pushState({'from':window.location.href}, "searched", "?q="+rawSearchWord);
+                            $("#searchedData").append(data);
+                            hellofrom = window.location.href;
+                            alert('scrollBottom')
+                        }
+                });
+            }
+        });
+
+        $("#loadButton").click(function () {
             var trimedSearchWord = $("#searchInput").val();
             var rawSearchWord = trimedSearchWord.split(" ").join("");
             $.ajax({
@@ -34,22 +149,10 @@
                 dataType : "html",
                 cache : false,
                 success : function (data) {
-
-
-{#                    console.log(window.location.href.replace("http://127.0.0.1:8000", ""));#}
-                    console.log(window.location.hash);
-                    window.history.pushState({'from':window.location.href}, "searched", "?q="+rawSearchWord);
-                    $("#searchedData").append(data)
-                    hellofrom = window.location.href;
-                    alert(hellofrom)
-                }
-            });
-        });
-        window.onpopstate = function(event) {
-            alert("to: " + document.location + ", state: " + JSON.stringify(event.state) + "From" + hellofrom);
-            console.log(hellofrom);
-            hellofrom = window.location.href;
-        };
+                        $("#searchedData").append(data);
+                    }
+                });
+        })
     });
 </script>
 </html>

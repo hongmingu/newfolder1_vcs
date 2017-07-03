@@ -26,22 +26,22 @@ class Stash(models.Model):
 
     stashText = models.TextField(max_length=200)
 
-    # stashImage = models.ImageField(null=True, blank=True, width_field="stashWidth", height_field="stashHeight")
-    # stashWidth = models.IntegerField(default=0)
-    # stashHeight = models.IntegerField(default=0)
-
     stashCreatedAt = models.DateTimeField(auto_now_add=True)
     stashUpdatedAt = models.DateTimeField(auto_now=True)
-
 
     def __str__(self):
         return self.stashText
 
+class StashVerbal(models.Model):
+    stash = models.ForeignKey(Stash)
+    stashVerbalUser = models.ForeignKey(User)
 
+    stashVerbalText = models.TextField(max_length=200)
 
-# stashPro = models.PositiveIntegerField(default=0)
-    # stashCon = models.PositiveIntegerField(default=0)
-    # stashStage = models.PositiveIntegerField(default=0)
-    # stashBlinded = models.SmallIntegerField(default=1)
+    stashCreatedAt = models.DateTimeField(auto_now_add=True)
+    stashUpdatedAt = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.stashVerbalText
 
 
